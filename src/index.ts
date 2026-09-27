@@ -5,4 +5,8 @@
  * exported here as the build loop adds them.
  */
 
+import './theme/theme.css'
+
 export const version = '0.1.0'
+
+export * from './theme'

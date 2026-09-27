@@ -1,0 +1,129 @@
+/**
+ * lumen-ui design tokens.
+ *
+ * The color scales below are the pre-generated defaults (from src/theme/palette.ts).
+ * Calling setTheme() or using <ThemeProvider> rewrites them at runtime from any
+ * brand color, so they never need to be hand-edited.
+ */
+
+:root,
+:root[data-theme='light'],
+[data-theme='light'] {
+  color-scheme: light;
+
+  --lumen-font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --lumen-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --lumen-radius-sm: 4px;
+  --lumen-radius-md: 8px;
+  --lumen-radius-lg: 12px;
+  --lumen-radius-full: 9999px;
+
+  --lumen-bg: #ffffff;
+  --lumen-bg-subtle: #f8fafc;
+  --lumen-surface: #ffffff;
+  --lumen-text: #0f172a;
+  --lumen-text-muted: #64748b;
+  --lumen-text-inverse: #ffffff;
+  --lumen-border: #e2e8f0;
+  --lumen-border-strong: #cbd5e1;
+
+  --lumen-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+  --lumen-shadow-md: 0 4px 12px rgb(15 23 42 / 0.1);
+  --lumen-shadow-lg: 0 12px 32px rgb(15 23 42 / 0.16);
+
+  --lumen-focus-ring: 0 0 0 3px rgb(79 70 229 / 0.28);
+
+  /* default color scales — rewritten at runtime by setTheme()/ThemeProvider */
+  --lumen-primary-50: #f1f0fd;
+  --lumen-primary-100: #e3e1fb;
+  --lumen-primary-200: #c7c4f7;
+  --lumen-primary-300: #aba6f3;
+  --lumen-primary-400: #807aec;
+  --lumen-primary-500: #4f46e5;
+  --lumen-primary-600: #433cc3;
+  --lumen-primary-700: #36309c;
+  --lumen-primary-800: #26226e;
+  --lumen-primary-900: #191649;
+  --lumen-primary: #433cc3;
+  --lumen-on-primary: #ffffff;
+  --lumen-secondary-50: #ecf8fd;
+  --lumen-secondary-100: #d8f1fb;
+  --lumen-secondary-200: #b2e2f8;
+  --lumen-secondary-300: #8bd4f4;
+  --lumen-secondary-400: #51beef;
+  --lumen-secondary-500: #0ea5e9;
+  --lumen-secondary-600: #0c8cc6;
+  --lumen-secondary-700: #0a709e;
+  --lumen-secondary-800: #074f70;
+  --lumen-secondary-900: #04354b;
+  --lumen-secondary: #0c8cc6;
+  --lumen-on-secondary: #111827;
+  --lumen-success-50: #ecf8f1;
+  --lumen-success-100: #daf0e2;
+  --lumen-success-200: #b4e2c5;
+  --lumen-success-300: #8fd3a8;
+  --lumen-success-400: #57bd7d;
+  --lumen-success-500: #16a34a;
+  --lumen-success-600: #138b3f;
+  --lumen-success-700: #0f6f32;
+  --lumen-success-800: #0b4e24;
+  --lumen-success-900: #073418;
+  --lumen-success: #138b3f;
+  --lumen-on-success: #ffffff;
+  --lumen-warning-50: #fcf4eb;
+  --lumen-warning-100: #f9e9d7;
+  --lumen-warning-200: #f3d3af;
+  --lumen-warning-300: #edbe87;
+  --lumen-warning-400: #e49d4c;
+  --lumen-warning-500: #d97706;
+  --lumen-warning-600: #b86505;
+  --lumen-warning-700: #945104;
+  --lumen-warning-800: #683903;
+  --lumen-warning-900: #452602;
+  --lumen-warning: #b86505;
+  --lumen-on-warning: #ffffff;
+  --lumen-danger-50: #fceeee;
+  --lumen-danger-100: #f9dcdc;
+  --lumen-danger-200: #f4baba;
+  --lumen-danger-300: #ee9797;
+  --lumen-danger-400: #e66363;
+  --lumen-danger-500: #dc2626;
+  --lumen-danger-600: #bb2020;
+  --lumen-danger-700: #961a1a;
+  --lumen-danger-800: #6a1212;
+  --lumen-danger-900: #460c0c;
+  --lumen-danger: #bb2020;
+  --lumen-on-danger: #ffffff;
+  --lumen-info-50: #ebf5fb;
+  --lumen-info-100: #d7ebf6;
+  --lumen-info-200: #aed8ed;
+  --lumen-info-300: #86c4e4;
+  --lumen-info-400: #49a6d7;
+  --lumen-info-500: #0284c7;
+  --lumen-info-600: #0270a9;
+  --lumen-info-700: #015a87;
+  --lumen-info-800: #013f60;
+  --lumen-info-900: #012a40;
+  --lumen-info: #0270a9;
+  --lumen-on-info: #ffffff;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --lumen-bg: #0b1220;
+  --lumen-bg-subtle: #0f172a;
+  --lumen-surface: #131c31;
+  --lumen-text: #f1f5f9;
+  --lumen-text-muted: #94a3b8;
+  --lumen-text-inverse: #0f172a;
+  --lumen-border: #1e293b;
+  --lumen-border-strong: #334155;
+
+  --lumen-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --lumen-shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+  --lumen-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.5);
+
+  --lumen-focus-ring: 0 0 0 3px rgb(129 140 248 / 0.35);
+}
