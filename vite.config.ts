@@ -9,6 +9,7 @@ export default defineConfig({
     vue(),
     dts({
       include: ['src'],
+      exclude: ['src/**/*.test.ts', 'src/test/**'],
       outDir: 'dist',
     }),
   ],
