@@ -12,7 +12,7 @@ A modern Vue 3 + TypeScript UI component library.
 ## Install
 
 ```bash
-npm install lumen-ui
+npm install @manjindersinghsarkaria/lumen-ui
 ```
 
 Requires Vue `^3.3.0` (peer dependency).
@@ -21,8 +21,8 @@ Requires Vue `^3.3.0` (peer dependency).
 
 ```ts
 import { createApp } from 'vue'
-import { createLumenI18n } from 'lumen-ui'
-import 'lumen-ui/dist/style.css'
+import { createLumenI18n } from '@manjindersinghsarkaria/lumen-ui'
+import '@manjindersinghsarkaria/lumen-ui/dist/style.css'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -36,7 +36,7 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-import { Button, Input, Modal } from 'lumen-ui'
+import { Button, Input, Modal } from '@manjindersinghsarkaria/lumen-ui'
 import { ref } from 'vue'
 
 const open = ref(false)
@@ -64,7 +64,7 @@ The full `--lumen-*-50…900` scales plus readable on-colors are derived automat
 (guaranteed 4.5:1 contrast on mid tones):
 
 ```ts
-import { setTheme, resetTheme } from 'lumen-ui'
+import { setTheme, resetTheme } from '@manjindersinghsarkaria/lumen-ui'
 
 // Brand the whole app with your organization's colors:
 setTheme({ primary: '#7c3aed', secondary: '#db2777' })
@@ -76,7 +76,7 @@ resetTheme()
 ### Dark / light / auto mode
 
 ```ts
-import { setMode, useTheme } from 'lumen-ui'
+import { setMode, useTheme } from '@manjindersinghsarkaria/lumen-ui'
 
 // 'light' | 'dark' | 'auto' (follows the OS preference)
 setMode('auto')
@@ -102,7 +102,7 @@ No `vue-i18n` required. Components render English by default; install the plugin
 switch locale or add translations:
 
 ```ts
-import { createLumenI18n } from 'lumen-ui'
+import { createLumenI18n } from '@manjindersinghsarkaria/lumen-ui'
 
 app.use(
   createLumenI18n({
@@ -117,7 +117,7 @@ app.use(
 Inside components (or setup functions):
 
 ```ts
-import { useI18n } from 'lumen-ui'
+import { useI18n } from '@manjindersinghsarkaria/lumen-ui'
 
 const { t, locale, setLocale, addMessages } = useI18n()
 
