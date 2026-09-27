@@ -20,6 +20,9 @@ const en: Messages = {
   input: {
     clear: 'Clear input',
   },
+  textarea: {
+    characters: '{count} / {max} characters',
+  },
 }
 
 export default en
