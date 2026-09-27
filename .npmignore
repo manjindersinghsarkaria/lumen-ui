@@ -1,0 +1,5 @@
+# never publish sources' tests or dev scaffolding
+src/**/*.test.ts
+src/test/
+demo/
+*.log
