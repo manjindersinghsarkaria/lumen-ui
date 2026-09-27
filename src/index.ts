@@ -10,3 +10,4 @@ import './theme/theme.css'
 export const version = '0.1.0'
 
 export * from './theme'
+export * from './i18n'
