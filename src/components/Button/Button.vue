@@ -200,10 +200,4 @@ function onClick(event: MouseEvent): void {
   border-radius: var(--lumen-radius-full);
   animation: lumen-spin 0.7s linear infinite;
 }
-
-@keyframes lumen-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 </style>

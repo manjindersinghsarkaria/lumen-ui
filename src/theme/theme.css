@@ -131,3 +131,10 @@
 
   --lumen-focus-ring: 0 0 0 3px rgb(129 140 248 / 0.35);
 }
+
+/* Shared animations */
+@keyframes lumen-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
