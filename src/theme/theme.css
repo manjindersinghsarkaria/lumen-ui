@@ -37,6 +37,7 @@
   --lumen-z-dropdown: 1000;
   --lumen-z-modal: 1100;
   --lumen-z-toast: 1200;
+  --lumen-z-tooltip: 1300;
 
   /* default color scales — rewritten at runtime by setTheme()/ThemeProvider */
   --lumen-primary-50: #f1f0fd;
