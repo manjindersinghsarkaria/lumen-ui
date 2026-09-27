@@ -35,6 +35,10 @@ const en: Messages = {
   modal: {
     close: 'Close dialog',
   },
+  table: {
+    selectAll: 'Select all rows',
+    selectRow: 'Select row',
+  },
   pagination: {
     label: 'Pagination',
     prev: 'Previous page',
