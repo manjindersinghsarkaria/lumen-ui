@@ -32,6 +32,9 @@ const en: Messages = {
   alert: {
     close: 'Close alert',
   },
+  modal: {
+    close: 'Close dialog',
+  },
 }
 
 export default en
