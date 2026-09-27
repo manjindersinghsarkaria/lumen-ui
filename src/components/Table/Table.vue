@@ -90,7 +90,7 @@ const sortedRows = computed(() => {
   return [...props.rows].sort((ra, rb) => dir * compareValues(ra[key], rb[key]))
 })
 
-function ariaSort(col: TableColumn): string | undefined {
+function ariaSort(col: TableColumn): 'none' | 'ascending' | 'descending' | undefined {
   if (!col.sortable) return undefined
   if (sortKey.value !== col.key) return 'none'
   return sortOrder.value === 'asc' ? 'ascending' : 'descending'

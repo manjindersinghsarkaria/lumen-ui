@@ -17,7 +17,7 @@ export interface CardProps {
   hoverable?: boolean
 }
 
-const props = withDefaults(defineProps<CardProps>(), {
+withDefaults(defineProps<CardProps>(), {
   title: undefined,
   subtitle: undefined,
   bordered: true,

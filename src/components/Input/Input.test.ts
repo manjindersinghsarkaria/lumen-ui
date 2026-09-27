@@ -39,7 +39,7 @@ describe('Input', () => {
     const wrapper = mount(Input, { props: { modelValue: '', clearable: true } })
     expect(wrapper.find('.lumen-input__clear').exists()).toBe(false)
     await wrapper.setProps({ modelValue: 'text' })
-    expect(wrapper.find('.lumen-input__clear').exists()).toBe(true)
+    expect(wrapper.find('.lumen-input__clear').element).toBeTruthy()
   })
 
   it('clear button resets the model and emits clear', async () => {
@@ -73,8 +73,8 @@ describe('Input', () => {
     const wrapper = mount(Input, {
       slots: { prefix: '<span class="pre">$</span>', suffix: '<span class="suf">.00</span>' },
     })
-    expect(wrapper.get('.lumen-input__prefix .pre').exists()).toBe(true)
-    expect(wrapper.get('.lumen-input__suffix .suf').exists()).toBe(true)
+    expect(wrapper.get('.lumen-input__prefix .pre').element).toBeTruthy()
+    expect(wrapper.get('.lumen-input__suffix .suf').element).toBeTruthy()
   })
 
   it('emits focus and blur', async () => {

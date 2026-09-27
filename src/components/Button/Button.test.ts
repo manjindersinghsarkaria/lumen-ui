@@ -70,7 +70,7 @@ describe('Button', () => {
     const wrapper = mount(Button, {
       slots: { icon: '<svg class="my-icon" />', default: 'With icon' },
     })
-    expect(wrapper.get('.lumen-btn__icon .my-icon').exists()).toBe(true)
+    expect(wrapper.get('.lumen-btn__icon .my-icon').element).toBeTruthy()
   })
 
   it('hides the icon slot while loading', () => {
@@ -79,6 +79,6 @@ describe('Button', () => {
       slots: { icon: '<svg class="my-icon" />' },
     })
     expect(wrapper.find('.lumen-btn__icon').exists()).toBe(false)
-    expect(wrapper.find('.lumen-btn__spinner').exists()).toBe(true)
+    expect(wrapper.find('.lumen-btn__spinner').element).toBeTruthy()
   })
 })

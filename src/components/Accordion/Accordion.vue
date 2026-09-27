@@ -39,7 +39,7 @@ const emit = defineEmits<{
 }>()
 
 /** Keys of the currently open sections. */
-const activeKeys = defineModel<Array<string | number>>({ default: [] })
+const activeKeys = defineModel<Array<string | number>>({ default: () => [] })
 
 const headerEls = ref<HTMLElement[]>([])
 

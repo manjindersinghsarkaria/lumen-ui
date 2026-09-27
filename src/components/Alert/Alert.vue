@@ -24,7 +24,7 @@ export interface AlertProps {
   role?: 'alert' | 'status'
 }
 
-const props = withDefaults(defineProps<AlertProps>(), {
+withDefaults(defineProps<AlertProps>(), {
   variant: 'info',
   title: undefined,
   closable: false,

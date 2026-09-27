@@ -49,14 +49,14 @@ describe('Progress', () => {
 
   it('applies a color override to the fill', () => {
     const wrapper = mount(Progress, { props: { percent: 50, color: '#ff0000' } })
-    expect(wrapper.get('.lumen-progress__fill').element.style.backgroundColor).toBe(
+    expect(((wrapper.get('.lumen-progress__fill').element) as HTMLElement).style.backgroundColor).toBe(
       'rgb(255, 0, 0)',
     )
   })
 
   it('uses strokeWidth as the bar track height', () => {
     const wrapper = mount(Progress, { props: { percent: 50, strokeWidth: 12 } })
-    expect(wrapper.get('.lumen-progress__track').element.style.height).toBe('12px')
+    expect(((wrapper.get('.lumen-progress__track').element) as HTMLElement).style.height).toBe('12px')
   })
 
   it('renders a circle with correct dash geometry', () => {
@@ -74,7 +74,7 @@ describe('Progress', () => {
       props: { percent: 25, type: 'circle', size: 160, strokeWidth: 10 },
     })
     const wrap = wrapper.get('.lumen-progress__circle-wrap')
-    expect(wrap.element.style.width).toBe('160px')
+    expect(((wrap.element) as HTMLElement).style.width).toBe('160px')
     const fill = wrapper.get('.lumen-progress__circle-fill')
     const r = (160 - 10) / 2
     expect(parseFloat(fill.attributes('stroke-dasharray')!)).toBeCloseTo(2 * Math.PI * r, 5)

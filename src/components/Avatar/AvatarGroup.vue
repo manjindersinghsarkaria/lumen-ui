@@ -57,9 +57,7 @@ const overflowCount = computed(() => children.value.length - visibleChildren.val
 
 <template>
   <div class="lumen-avatar-group" role="group" :aria-label="`Avatar group, ${children.length} members`">
-    <template v-for="(vnode, index) in visibleChildren" :key="index">
-      <component :is="vnode" />
-    </template>
+    <component v-for="(vnode, index) in visibleChildren" :is="vnode" :key="index" />
     <Avatar v-if="overflowCount > 0" class="lumen-avatar-group__overflow" :aria-label="`${overflowCount} more`">
       +{{ overflowCount }}
     </Avatar>

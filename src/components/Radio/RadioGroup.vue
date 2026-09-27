@@ -25,7 +25,7 @@ export interface RadioGroupProps {
   direction?: RadioGroupDirection
 }
 
-const props = withDefaults(defineProps<RadioGroupProps>(), {
+withDefaults(defineProps<RadioGroupProps>(), {
   options: () => [],
   name: undefined,
   disabled: false,

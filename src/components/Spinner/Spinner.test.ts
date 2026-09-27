@@ -13,16 +13,16 @@ describe('Spinner', () => {
 
   it('maps named sizes to pixel diameters', () => {
     const sm = mount(Spinner, { props: { size: 'sm' } })
-    expect(sm.get('.lumen-spinner__ring').element.style.width).toBe('16px')
+    expect(((sm.get('.lumen-spinner__ring').element) as HTMLElement).style.width).toBe('16px')
     const md = mount(Spinner, { props: { size: 'md' } })
-    expect(md.get('.lumen-spinner__ring').element.style.width).toBe('24px')
+    expect(((md.get('.lumen-spinner__ring').element) as HTMLElement).style.width).toBe('24px')
     const lg = mount(Spinner, { props: { size: 'lg' } })
-    expect(lg.get('.lumen-spinner__ring').element.style.width).toBe('32px')
+    expect(((lg.get('.lumen-spinner__ring').element) as HTMLElement).style.width).toBe('32px')
   })
 
   it('accepts a numeric size', () => {
     const wrapper = mount(Spinner, { props: { size: 48 } })
-    const ring = wrapper.get('.lumen-spinner__ring').element.style
+    const ring = ((wrapper.get('.lumen-spinner__ring').element) as HTMLElement).style
     expect(ring.width).toBe('48px')
     expect(ring.height).toBe('48px')
   })

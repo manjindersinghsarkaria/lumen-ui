@@ -15,7 +15,7 @@ export interface RadioProps {
   name?: string
 }
 
-const props = withDefaults(defineProps<RadioProps>(), {
+withDefaults(defineProps<RadioProps>(), {
   disabled: false,
   label: undefined,
   name: undefined,

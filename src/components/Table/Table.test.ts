@@ -43,8 +43,8 @@ describe('Table', () => {
   it('applies column width and alignment styles', () => {
     const wrapper = mountTable()
     const ageTh = wrapper.findAll('thead th')[1]
-    expect(ageTh.element.style.width).toBe('80px')
-    expect(ageTh.element.style.textAlign).toBe('right')
+    expect(((ageTh.element) as HTMLElement).style.width).toBe('80px')
+    expect(((ageTh.element) as HTMLElement).style.textAlign).toBe('right')
   })
 
   it('sorts ascending, descending, then clears on repeated header clicks', async () => {

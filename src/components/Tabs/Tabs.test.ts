@@ -60,7 +60,7 @@ describe('Tabs', () => {
     // simulate a v-model parent syncing the prop on each emission
     const sync = async () => {
       const emitted = wrapper.emitted('update:modelValue')
-      if (emitted) await wrapper.setProps({ modelValue: emitted[emitted.length - 1][0] })
+      if (emitted) await wrapper.setProps({ modelValue: emitted[emitted.length - 1][0] as string | number })
     }
     await tablist.trigger('keydown', { key: 'ArrowRight' })
     expect(wrapper.emitted('update:modelValue')![0]).toEqual(['details'])
@@ -91,7 +91,7 @@ describe('Tabs', () => {
         tab: '<span class="custom-label">custom</span>',
       },
     })
-    expect(wrapper.get('.lumen-tabs__extra .add-btn').exists()).toBe(true)
+    expect(wrapper.get('.lumen-tabs__extra .add-btn').element).toBeTruthy()
     expect(wrapper.findAll('.custom-label')).toHaveLength(3)
   })
 

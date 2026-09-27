@@ -46,7 +46,7 @@ const emit = defineEmits<{
 }>()
 
 /** The active tab's key. */
-const activeKey = defineModel<string | number>({ default: undefined })
+const activeKey = defineModel<string | number>()
 
 const { t } = useI18n()
 
