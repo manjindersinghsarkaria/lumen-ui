@@ -49,6 +49,15 @@ describe('Avatar', () => {
       'lumen-avatar__status--online',
     )
   })
+
+  it('keeps the status dot outside the clipping container so it is never cut off', () => {
+    const wrapper = mount(Avatar, { props: { name: 'Ada', status: 'online' } })
+    const status = wrapper.get('.lumen-avatar__status')
+    // The dot must be a direct child of .lumen-avatar, not nested inside
+    // .lumen-avatar__body (which has overflow: hidden to clip the image).
+    expect(status.element.parentElement?.classList.contains('lumen-avatar')).toBe(true)
+    expect(wrapper.get('.lumen-avatar__body').find('.lumen-avatar__status').exists()).toBe(false)
+  })
 })
 
 describe('AvatarGroup', () => {

@@ -86,23 +86,25 @@ function onImageError(): void {
     role="img"
     :aria-label="ariaLabel ?? name ?? undefined"
   >
-    <img
-      v-if="showImage"
-      class="lumen-avatar__img"
-      :src="src"
-      :alt="alt ?? name ?? ''"
-      @error="onImageError"
-    />
-    <span v-else class="lumen-avatar__fallback" aria-hidden="true">
-      <slot>
-        <span v-if="derivedInitials" class="lumen-avatar__initials">{{ derivedInitials }}</span>
-        <svg v-else viewBox="0 0 24 24" class="lumen-avatar__icon">
-          <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <circle cx="12" cy="8.5" r="3.5" />
-            <path d="M5 19.5c1.2-3.2 3.8-5 7-5s5.8 1.8 7 5" />
-          </g>
-        </svg>
-      </slot>
+    <span class="lumen-avatar__body">
+      <img
+        v-if="showImage"
+        class="lumen-avatar__img"
+        :src="src"
+        :alt="alt ?? name ?? ''"
+        @error="onImageError"
+      />
+      <span v-else class="lumen-avatar__fallback" aria-hidden="true">
+        <slot>
+          <span v-if="derivedInitials" class="lumen-avatar__initials">{{ derivedInitials }}</span>
+          <svg v-else viewBox="0 0 24 24" class="lumen-avatar__icon">
+            <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="8.5" r="3.5" />
+              <path d="M5 19.5c1.2-3.2 3.8-5 7-5s5.8 1.8 7 5" />
+            </g>
+          </svg>
+        </slot>
+      </span>
     </span>
     <span
       v-if="status"
@@ -117,17 +119,23 @@ function onImageError(): void {
 .lumen-avatar {
   position: relative;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
   width: 2.5rem;
   height: 2.5rem;
+  vertical-align: middle;
+}
+.lumen-avatar__body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  border-radius: inherit;
   background-color: var(--lumen-bg-subtle);
   color: var(--lumen-text-muted);
   font-family: var(--lumen-font-sans);
   font-weight: 600;
-  vertical-align: middle;
 }
 .lumen-avatar--circle {
   border-radius: 50%;
