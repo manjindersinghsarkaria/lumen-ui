@@ -39,6 +39,10 @@ const en: Messages = {
     selectAll: 'Select all rows',
     selectRow: 'Select row',
   },
+  toast: {
+    label: 'Notifications',
+    close: 'Dismiss notification',
+  },
   pagination: {
     label: 'Pagination',
     prev: 'Previous page',
