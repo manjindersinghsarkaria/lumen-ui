@@ -26,7 +26,8 @@
     "license": "MIT",
     "main": "./dist/lumen-ui.umd.cjs",
     "module": "./dist/lumen-ui.js",
-    "name": "lumen-ui",
+    "name": "@manjindersinghsarkaria/lumen-ui",
+    "author": "Manjinder Sarkaria",
     "peerDependencies": {
         "vue": "^3.3.0"
     },
