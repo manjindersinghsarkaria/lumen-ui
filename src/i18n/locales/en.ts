@@ -29,6 +29,9 @@ const en: Messages = {
     noOptions: 'No options found',
     clear: 'Clear selection',
   },
+  alert: {
+    close: 'Close alert',
+  },
 }
 
 export default en
