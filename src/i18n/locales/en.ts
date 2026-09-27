@@ -35,6 +35,10 @@ const en: Messages = {
   modal: {
     close: 'Close dialog',
   },
+  tabs: {
+    list: 'Tabs',
+    close: 'Close tab',
+  },
 }
 
 export default en
