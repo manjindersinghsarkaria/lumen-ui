@@ -43,6 +43,9 @@ const en: Messages = {
     label: 'Notifications',
     close: 'Dismiss notification',
   },
+  breadcrumb: {
+    label: 'Breadcrumb',
+  },
   pagination: {
     label: 'Pagination',
     prev: 'Previous page',
