@@ -34,6 +34,10 @@
 
   --lumen-focus-ring: 0 0 0 3px rgb(79 70 229 / 0.28);
 
+  --lumen-z-dropdown: 1000;
+  --lumen-z-modal: 1100;
+  --lumen-z-toast: 1200;
+
   /* default color scales — rewritten at runtime by setTheme()/ThemeProvider */
   --lumen-primary-50: #f1f0fd;
   --lumen-primary-100: #e3e1fb;

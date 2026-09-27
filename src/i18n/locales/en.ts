@@ -23,6 +23,12 @@ const en: Messages = {
   textarea: {
     characters: '{count} / {max} characters',
   },
+  select: {
+    placeholder: 'Select an option',
+    search: 'Search options',
+    noOptions: 'No options found',
+    clear: 'Clear selection',
+  },
 }
 
 export default en
