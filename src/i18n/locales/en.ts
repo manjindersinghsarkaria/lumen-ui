@@ -14,6 +14,9 @@ const en: Messages = {
     confirm: 'Confirm',
     cancel: 'Cancel',
   },
+  button: {
+    loading: 'Loading',
+  },
 }
 
 export default en
