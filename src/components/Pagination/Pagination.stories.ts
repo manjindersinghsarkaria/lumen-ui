@@ -1,12 +1,7 @@
 import { Pagination } from './index'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Pagination stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Pagination stories (CSF3). */
 
 interface StoryArgs {
   page?: number
@@ -18,15 +13,12 @@ interface StoryArgs {
   disabled?: boolean
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Pagination>
 
 function makeStory(args: StoryArgs): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Pagination },
       setup: () => ({ args: renderArgs }),
       template: `<Pagination v-bind="args" />`,
@@ -34,10 +26,12 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Pagination',
   component: Pagination,
-}
+} satisfies Meta<typeof Pagination>
+
+export default meta
 
 export const Default: Story = makeStory({ total: 95 })
 

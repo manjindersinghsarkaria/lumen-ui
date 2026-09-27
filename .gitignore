@@ -27,3 +27,6 @@ npm-debug.log*
 
 # loop run artifacts
 *.tsbuildinfo
+
+# Storybook build output
+storybook-static/

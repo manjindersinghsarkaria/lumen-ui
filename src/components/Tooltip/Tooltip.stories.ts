@@ -1,13 +1,8 @@
 import { Tooltip } from './index'
 import type { TooltipPlacement, TooltipTrigger } from './Tooltip.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Tooltip stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Tooltip stories (CSF3). */
 
 interface StoryArgs {
   content?: string
@@ -18,10 +13,7 @@ interface StoryArgs {
   disabled?: boolean
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Tooltip>
 
 function triggerButton(label = 'Hover me'): string {
   return `<button type="button" style="padding: 0.5rem 1rem;">${label}</button>`
@@ -30,7 +22,7 @@ function triggerButton(label = 'Hover me'): string {
 function makeStory(args: StoryArgs, buttonLabel?: string): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Tooltip },
       setup: () => ({ args: renderArgs }),
       template: `<div style="padding: 4rem; text-align: center;"><Tooltip v-bind="args">${triggerButton(buttonLabel)}</Tooltip></div>`,
@@ -38,14 +30,16 @@ function makeStory(args: StoryArgs, buttonLabel?: string): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Tooltip',
   component: Tooltip,
   argTypes: {
     placement: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
     trigger: { control: 'select', options: ['hover', 'focus', 'click'] },
   },
-}
+} satisfies Meta<typeof Tooltip>
+
+export default meta
 
 export const Default: Story = makeStory({ content: 'This is a helpful tooltip' })
 

@@ -1,13 +1,8 @@
 import { Breadcrumb } from './index'
 import type { BreadcrumbItem } from './index'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Breadcrumb stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Breadcrumb stories (CSF3). */
 
 interface StoryArgs {
   items?: BreadcrumbItem[]
@@ -15,10 +10,7 @@ interface StoryArgs {
   maxItems?: number
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Breadcrumb>
 
 const items: BreadcrumbItem[] = [
   { label: 'Home', href: '#' },
@@ -29,7 +21,7 @@ const items: BreadcrumbItem[] = [
 function makeStory(args: StoryArgs): Story {
   return {
     args: { items, ...args },
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Breadcrumb },
       setup: () => ({ args: renderArgs }),
       template: `<Breadcrumb v-bind="args" />`,
@@ -37,10 +29,12 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Breadcrumb',
   component: Breadcrumb,
-}
+} satisfies Meta<typeof Breadcrumb>
+
+export default meta
 
 export const Default: Story = makeStory({})
 
@@ -59,7 +53,7 @@ export const Collapsed: Story = makeStory({
 
 export const WithIcons: Story = {
   args: { items },
-  render: (renderArgs: StoryArgs) => ({
+  render: (renderArgs) => ({
     components: { Breadcrumb },
     setup: () => ({ args: renderArgs }),
     template: `

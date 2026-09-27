@@ -1,13 +1,8 @@
 import { Spinner } from './index'
 import type { SpinnerSize } from './Spinner.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Spinner stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Spinner stories (CSF3). */
 
 interface StoryArgs {
   size?: SpinnerSize | number
@@ -15,15 +10,12 @@ interface StoryArgs {
   tip?: string
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Spinner>
 
 function makeStory(args: StoryArgs): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Spinner },
       setup: () => ({ args: renderArgs }),
       template: `<Spinner v-bind="args" />`,
@@ -31,13 +23,15 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Spinner',
   component: Spinner,
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
-}
+} satisfies Meta<typeof Spinner>
+
+export default meta
 
 export const Default: Story = makeStory({})
 

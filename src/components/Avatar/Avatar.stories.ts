@@ -1,13 +1,8 @@
 import { Avatar, AvatarGroup } from './index'
 import type { AvatarShape, AvatarSize, AvatarStatus } from './Avatar.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Avatar stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Avatar stories (CSF3). */
 
 interface AvatarStoryArgs {
   src?: string
@@ -18,12 +13,9 @@ interface AvatarStoryArgs {
   status?: AvatarStatus
 }
 
-interface Story {
-  args?: Record<string, unknown>
-  render: (args: Record<string, unknown>) => object
-}
+type Story = StoryObj<typeof Avatar>
 
-export default {
+const meta = {
   title: 'Components/Avatar',
   component: Avatar,
   argTypes: {
@@ -31,7 +23,9 @@ export default {
     shape: { control: 'select', options: ['circle', 'square'] },
     status: { control: 'select', options: ['online', 'offline', 'busy', 'away'] },
   },
-}
+} satisfies Meta<typeof Avatar>
+
+export default meta
 
 function avatarTemplate(extra = ''): string {
   return `<Avatar v-bind="args" ${extra} />`

@@ -1,13 +1,8 @@
 import { Accordion } from './index'
 import type { AccordionItem, AccordionIconPosition } from './Accordion.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Accordion stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Accordion stories (CSF3). */
 
 interface StoryArgs {
   items?: AccordionItem[]
@@ -16,10 +11,7 @@ interface StoryArgs {
   modelValue?: Array<string | number>
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Accordion>
 
 const sampleItems: AccordionItem[] = [
   { key: 'a', title: 'What is lumen-ui?' },
@@ -36,7 +28,7 @@ const sampleContent: Record<string, string> = {
 function makeStory(args: StoryArgs): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Accordion },
       setup: () => ({ args: renderArgs, content: sampleContent }),
       template: `
@@ -49,13 +41,15 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Accordion',
   component: Accordion,
   argTypes: {
     expandIconPosition: { control: 'select', options: ['left', 'right'] },
   },
-}
+} satisfies Meta<typeof Accordion>
+
+export default meta
 
 export const Default: Story = makeStory({ items: sampleItems, modelValue: ['a'] })
 

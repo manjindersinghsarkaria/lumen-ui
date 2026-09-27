@@ -1,13 +1,8 @@
 import { Table } from './index'
 import type { TableColumn, TableRow } from './index'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Table stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Table stories (CSF3). */
 
 interface StoryArgs {
   columns?: TableColumn[]
@@ -19,10 +14,7 @@ interface StoryArgs {
   bordered?: boolean
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Table>
 
 const columns: TableColumn[] = [
   { key: 'name', title: 'Name', sortable: true },
@@ -40,7 +32,7 @@ const rows: TableRow[] = [
 function makeStory(args: StoryArgs): Story {
   return {
     args: { columns, rows, rowKey: 'id', ...args },
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Table },
       setup: () => ({ args: renderArgs }),
       template: `<Table v-bind="args" />`,
@@ -48,10 +40,12 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Table',
   component: Table,
-}
+} satisfies Meta<typeof Table>
+
+export default meta
 
 export const Default: Story = makeStory({})
 
@@ -65,7 +59,7 @@ export const Empty: Story = makeStory({ rows: [] })
 
 export const CustomCell: Story = {
   args: { columns, rows, rowKey: 'id' },
-  render: (renderArgs: StoryArgs) => ({
+  render: (renderArgs) => ({
     components: { Table },
     setup: () => ({ args: renderArgs }),
     template: `

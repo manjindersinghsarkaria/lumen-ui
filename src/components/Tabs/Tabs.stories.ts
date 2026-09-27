@@ -1,13 +1,8 @@
 import { Tabs } from './index'
 import type { TabItem, TabsVariant } from './Tabs.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Tabs stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Tabs stories (CSF3). */
 
 interface StoryArgs {
   items?: TabItem[]
@@ -16,10 +11,7 @@ interface StoryArgs {
   modelValue?: string | number
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Tabs>
 
 const sampleItems: TabItem[] = [
   { key: 'overview', label: 'Overview' },
@@ -30,7 +22,7 @@ const sampleItems: TabItem[] = [
 function makeStory(args: StoryArgs): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Tabs },
       setup: () => ({ args: renderArgs }),
       template: `
@@ -43,13 +35,15 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Tabs',
   component: Tabs,
   argTypes: {
     variant: { control: 'select', options: ['line', 'card'] },
   },
-}
+} satisfies Meta<typeof Tabs>
+
+export default meta
 
 export const Line: Story = makeStory({ items: sampleItems, modelValue: 'overview' })
 
@@ -71,7 +65,7 @@ export const Closable: Story = makeStory({
 
 export const WithExtra: Story = {
   args: { items: sampleItems, modelValue: 'overview' },
-  render: (renderArgs: StoryArgs) => ({
+  render: (renderArgs) => ({
     components: { Tabs },
     setup: () => ({ args: renderArgs }),
     template: `

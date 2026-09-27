@@ -1,13 +1,8 @@
 import { Progress } from './index'
 import type { ProgressStatus, ProgressType } from './Progress.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Progress stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Progress stories (CSF3). */
 
 interface StoryArgs {
   percent?: number
@@ -19,15 +14,12 @@ interface StoryArgs {
   size?: number
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Progress>
 
 function makeStory(args: StoryArgs): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Progress },
       setup: () => ({ args: renderArgs }),
       template: `<div style="width: 320px;"><Progress v-bind="args" /></div>`,
@@ -35,7 +27,7 @@ function makeStory(args: StoryArgs): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Progress',
   component: Progress,
   argTypes: {
@@ -43,7 +35,9 @@ export default {
     status: { control: 'select', options: ['active', 'success', 'exception'] },
     percent: { control: { type: 'range', min: 0, max: 100, step: 1 } },
   },
-}
+} satisfies Meta<typeof Progress>
+
+export default meta
 
 export const Default: Story = makeStory({ percent: 40 })
 
@@ -66,7 +60,7 @@ export const Statuses: Story = {
 
 export const Circle: Story = {
   args: { type: 'circle', percent: 65 },
-  render: (renderArgs: StoryArgs) => ({
+  render: (renderArgs) => ({
     components: { Progress },
     setup: () => ({ args: renderArgs }),
     template: `<Progress v-bind="args" />`,

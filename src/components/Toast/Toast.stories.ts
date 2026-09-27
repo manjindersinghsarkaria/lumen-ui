@@ -1,27 +1,19 @@
 import { ToastHost, useToast } from './index'
 import type { ToastPlacement } from './index'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Toast stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Toast stories (CSF3). */
 
 interface StoryArgs {
   placement?: ToastPlacement
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof ToastHost>
 
 function makeStory(args: StoryArgs, buttons: string): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { ToastHost },
       setup: () => ({ args: renderArgs, toast: useToast() }),
       template: `
@@ -45,7 +37,7 @@ const typeButtons = `
   <button style="${buttonStyle}" @click="toast.warning('Careful', { description: 'This action cannot be undone.' })">Warning</button>
 `
 
-export default {
+const meta = {
   title: 'Components/Toast',
   component: ToastHost,
   argTypes: {
@@ -61,7 +53,9 @@ export default {
       ],
     },
   },
-}
+} satisfies Meta<typeof ToastHost>
+
+export default meta
 
 export const Types: Story = makeStory({}, typeButtons)
 

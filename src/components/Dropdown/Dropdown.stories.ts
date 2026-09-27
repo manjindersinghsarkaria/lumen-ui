@@ -1,13 +1,8 @@
 import { Dropdown } from './index'
 import type { DropdownItem, DropdownPlacement } from './Dropdown.vue'
+import type { Meta, StoryObj } from '@storybook/vue3'
 
-/**
- * Dropdown stories (CSF3).
- *
- * Note: @storybook/vue3 is installed by T28, so these stories intentionally
- * avoid importing its types — T28 will upgrade them to typed
- * `Meta`/`StoryObj` and verify them with `npm run build-storybook`.
- */
+/** Dropdown stories (CSF3). */
 
 interface StoryArgs {
   items?: DropdownItem[]
@@ -16,10 +11,7 @@ interface StoryArgs {
   open?: boolean
 }
 
-interface Story {
-  args?: StoryArgs
-  render: (args: StoryArgs) => object
-}
+type Story = StoryObj<typeof Dropdown>
 
 const sampleItems: DropdownItem[] = [
   { label: 'Edit', value: 'edit' },
@@ -32,7 +24,7 @@ const sampleItems: DropdownItem[] = [
 function makeStory(args: StoryArgs, triggerLabel = 'Open menu'): Story {
   return {
     args,
-    render: (renderArgs: StoryArgs) => ({
+    render: (renderArgs) => ({
       components: { Dropdown },
       setup: () => ({ args: renderArgs }),
       template: `
@@ -45,7 +37,7 @@ function makeStory(args: StoryArgs, triggerLabel = 'Open menu'): Story {
   }
 }
 
-export default {
+const meta = {
   title: 'Components/Dropdown',
   component: Dropdown,
   argTypes: {
@@ -54,7 +46,9 @@ export default {
       options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
     },
   },
-}
+} satisfies Meta<typeof Dropdown>
+
+export default meta
 
 export const Default: Story = makeStory({ items: sampleItems })
 
@@ -82,7 +76,7 @@ export const WithIcons: Story = {
       { label: 'Log out', value: 'logout', icon: 'exit', danger: true, divided: true },
     ],
   },
-  render: (renderArgs: StoryArgs) => ({
+  render: (renderArgs) => ({
     components: { Dropdown },
     setup: () => ({ args: renderArgs }),
     template: `
