@@ -35,6 +35,14 @@ const en: Messages = {
   modal: {
     close: 'Close dialog',
   },
+  pagination: {
+    label: 'Pagination',
+    prev: 'Previous page',
+    next: 'Next page',
+    goToPage: 'Go to page {page}',
+    jumpTo: 'Jump to',
+    pageSize: 'Items per page',
+  },
   tabs: {
     list: 'Tabs',
     close: 'Close tab',
