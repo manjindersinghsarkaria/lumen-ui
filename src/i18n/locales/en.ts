@@ -17,6 +17,9 @@ const en: Messages = {
   button: {
     loading: 'Loading',
   },
+  input: {
+    clear: 'Clear input',
+  },
 }
 
 export default en
