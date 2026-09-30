@@ -38,6 +38,11 @@ const en: Messages = {
   table: {
     selectAll: 'Select all rows',
     selectRow: 'Select row',
+    globalFilterPlaceholder: 'Search…',
+    filterByColumn: 'Filter by {column}',
+    pageReport: '{first}–{last} of {total}',
+    exportCsv: 'Export CSV',
+    noResults: 'No matching records',
   },
   toast: {
     label: 'Notifications',
