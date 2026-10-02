@@ -66,16 +66,30 @@ export type TableRow = Record<string, unknown>
 
 export type PaginatorPosition = 'top' | 'bottom' | 'both'
 
+/** Selection input type in the selection column. Requires `selectable`. */
+export type TableSelectionMode = 'checkbox' | 'radio'
+
+/** Whether one or many rows can be expanded at once. */
+export type TableExpandMode = 'single' | 'multiple'
+
 export interface TableProps {
   columns: TableColumn[]
   rows: TableRow[]
   /** Row identity: a row key, or a function of (row, index). Defaults to the index. */
   rowKey?: string | ((row: TableRow, index: number) => string | number)
-  /** Show the selection checkbox column. */
+  /** Show the selection checkbox/radio column. */
   selectable?: boolean
   /** Selected row keys (v-model:selected). */
   selected?: (string | number)[]
-  /** Show the loading state instead of rows. */
+  /** Selection input type in the selection column. Default `checkbox`. */
+  selectionMode?: TableSelectionMode
+  /** Clicking a row selects it. Default `false`. */
+  selectOnRowClick?: boolean
+  /**
+   * With row-click multiple selection, a plain click selects only that row
+   * while meta/ctrl+click toggles. Default `true` (PrimeVue behavior).
+   */
+  metaKeySelection?: boolean  /** Show the loading state instead of rows. */
   loading?: boolean
   /** Zebra striping. */
   striped?: boolean
@@ -107,6 +121,14 @@ export interface TableProps {
   exportFilename?: string
   /** Render a built-in "Export CSV" button in the table header area. Default `false`. */
   showExportButton?: boolean
+  /** Show the row-expander column. Expanded content comes from the `#expansion` slot. */
+  expandable?: boolean
+  /** Expanded row keys (v-model:expandedRows). */
+  expandedRows?: (string | number)[]
+  /** Initial expanded keys for uncontrolled usage. */
+  defaultExpandedRows?: (string | number)[]
+  /** Whether one or many rows can be expanded at once. Default `multiple`. */
+  expandMode?: TableExpandMode
   /** Accessible label for the table. */
   ariaLabel?: string
 }

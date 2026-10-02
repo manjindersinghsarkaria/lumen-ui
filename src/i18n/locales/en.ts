@@ -43,6 +43,8 @@ const en: Messages = {
     pageReport: '{first}–{last} of {total}',
     exportCsv: 'Export CSV',
     noResults: 'No matching records',
+    expandRow: 'Expand row',
+    collapseRow: 'Collapse row',
   },
   toast: {
     label: 'Notifications',

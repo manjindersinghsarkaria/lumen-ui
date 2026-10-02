@@ -9,5 +9,7 @@ export type {
   TableFilter,
   TableFilters,
   PaginatorPosition,
+  TableSelectionMode,
+  TableExpandMode,
 } from './types'
 export { GLOBAL_FILTER_KEY } from './types'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, ref, useId, useSlots, watch } from 'vue'
 import { useI18n } from '../../i18n'
 import { Spinner } from '../Spinner'
 import { Input } from '../Input'
@@ -37,6 +37,9 @@ const props = withDefaults(defineProps<TableProps>(), {
   rowKey: undefined,
   selectable: false,
   selected: () => [],
+  selectionMode: 'checkbox',
+  selectOnRowClick: false,
+  metaKeySelection: true,
   loading: false,
   striped: false,
   bordered: false,
@@ -53,6 +56,10 @@ const props = withDefaults(defineProps<TableProps>(), {
   showGlobalFilter: false,
   exportFilename: 'lumen-table',
   showExportButton: false,
+  expandable: false,
+  expandedRows: undefined,
+  defaultExpandedRows: () => [],
+  expandMode: 'multiple',
   ariaLabel: undefined,
 })
 
@@ -69,6 +76,14 @@ const emit = defineEmits<{
   'update:page': [page: number]
   'update:rowsPerPage': [rowsPerPage: number]
   'page-change': [page: number, rowsPerPage: number]
+  /** Emitted for each row that becomes selected / unselected. */
+  'row-select': [row: TableRow]
+  'row-unselect': [row: TableRow]
+  /** Emitted on any row click, before selection handling. */
+  'row-click': [row: TableRow, index: number]
+  'update:expandedRows': [expandedRows: (string | number)[]]
+  'row-expand': [row: TableRow]
+  'row-collapse': [row: TableRow]
 }>()
 
 const { t } = useI18n()
@@ -77,7 +92,10 @@ const slots = useSlots()
 /* ---------- columns ---------- */
 
 const visibleCols = computed(() => visibleColumns(props.columns))
-const columnCount = computed(() => visibleCols.value.length + (props.selectable ? 1 : 0))
+const columnCount = computed(
+  () =>
+    visibleCols.value.length + (props.selectable ? 1 : 0) + (props.expandable ? 1 : 0),
+)
 const showFilterRow = computed(() => visibleCols.value.some((c) => c.filterable))
 
 function columnByKey(key: string): TableColumn | undefined {
@@ -305,23 +323,54 @@ function keyOfRow(row: TableRow): string | number {
 }
 
 const selectedSet = computed(() => new Set(props.selected))
+const radioGroupName = useId()
 
 function setSelected(keys: (string | number)[]) {
+  const prev = selectedSet.value
+  const next = new Set(keys)
   emit('update:selected', keys)
-  const keySet = new Set(keys)
   emit(
     'selection-change',
     keys,
-    props.rows.filter((row) => keySet.has(keyOfRow(row))),
+    props.rows.filter((row) => next.has(keyOfRow(row))),
   )
+  for (const row of props.rows) {
+    const k = keyOfRow(row)
+    if (!prev.has(k) && next.has(k)) emit('row-select', row)
+    else if (prev.has(k) && !next.has(k)) emit('row-unselect', row)
+  }
 }
 
 function toggleRow(row: TableRow) {
   const key = keyOfRow(row)
+  if (props.selectionMode === 'radio') {
+    if (!selectedSet.value.has(key)) setSelected([key])
+    return
+  }
   const next = new Set(selectedSet.value)
   if (next.has(key)) next.delete(key)
   else next.add(key)
   setSelected([...next])
+}
+
+/** Select a single row, clearing any previous selection. */
+function selectRow(row: TableRow) {
+  const key = keyOfRow(row)
+  if (!selectedSet.value.has(key) || selectedSet.value.size !== 1) setSelected([key])
+}
+
+function onRowClick(row: TableRow, index: number, event: MouseEvent) {
+  emit('row-click', row, index)
+  if (!props.selectable || !props.selectOnRowClick) return
+  const target = event.target as HTMLElement | null
+  if (target?.closest('input, button, a, select, textarea, [data-no-row-select]')) return
+  if (props.selectionMode === 'radio') {
+    selectRow(row)
+    return
+  }
+  const withMeta = event.metaKey || event.ctrlKey
+  if (props.metaKeySelection && !withMeta) selectRow(row)
+  else toggleRow(row)
 }
 
 /** Header checkbox toggles the rows currently rendered (page, or all rows). */
@@ -345,6 +394,47 @@ function toggleAll() {
     setSelected([...next])
   }
 }
+
+/* ---------- expandable rows ---------- */
+
+const expandedState = ref<(string | number)[]>([
+  ...(props.expandedRows ?? props.defaultExpandedRows ?? []),
+])
+watch(
+  () => props.expandedRows,
+  (next) => {
+    if (next) expandedState.value = [...next]
+  },
+)
+
+const expandedSet = computed(() => new Set(expandedState.value))
+
+function isExpanded(key: string | number): boolean {
+  return expandedSet.value.has(key)
+}
+
+function setExpanded(keys: (string | number)[]) {
+  expandedState.value = keys
+  emit('update:expandedRows', [...keys])
+}
+
+function toggleExpand(row: TableRow) {
+  const key = keyOfRow(row)
+  const open = expandedSet.value.has(key)
+  if (props.expandMode === 'single') {
+    setExpanded(open ? [] : [key])
+  } else {
+    const next = new Set(expandedSet.value)
+    if (open) next.delete(key)
+    else next.add(key)
+    setExpanded([...next])
+  }
+  if (open) emit('row-collapse', row)
+  else emit('row-expand', row)
+}
+
+/** Displayed rows with their stable keys (used by selection + expansion). */
+const displayRows = computed(() => pagedRows.value.map((row) => ({ row, key: keyOfRow(row) })))
 
 /* ---------- CSV export ---------- */
 
@@ -419,8 +509,10 @@ const emptyText = computed(() =>
       >
         <thead>
           <tr>
+            <th v-if="expandable" class="lumen-table__cell--expander" scope="col" aria-hidden="true" />
             <th v-if="selectable" class="lumen-table__cell--selection" scope="col">
               <input
+                v-if="selectionMode === 'checkbox'"
                 type="checkbox"
                 :checked="allSelected"
                 :indeterminate="someSelected"
@@ -471,6 +563,7 @@ const emptyText = computed(() =>
             </th>
           </tr>
           <tr v-if="showFilterRow" class="lumen-table__filter-row">
+            <th v-if="expandable" class="lumen-table__cell--expander" scope="col" />
             <th v-if="selectable" class="lumen-table__cell--selection" scope="col" />
             <th v-for="col in visibleCols" :key="`filter-${col.key}`" scope="col">
               <slot
@@ -508,29 +601,66 @@ const emptyText = computed(() =>
             </td>
           </tr>
           <template v-else>
-            <tr
-              v-for="(row, i) in pagedRows"
-              :key="keyOfRow(row)"
-              :class="{ 'lumen-table__row--selected': selectedSet.has(keyOfRow(row)) }"
-            >
-              <td v-if="selectable" class="lumen-table__cell--selection">
-                <input
-                  type="checkbox"
-                  :checked="selectedSet.has(keyOfRow(row))"
-                  :aria-label="t('table.selectRow')"
-                  @change="toggleRow(row)"
-                />
-              </td>
-              <td
-                v-for="col in visibleCols"
-                :key="col.key"
-                :style="{ textAlign: col.align ?? 'left' }"
+            <template v-for="(item, i) in displayRows" :key="item.key">
+              <tr
+                :class="{
+                  'lumen-table__row--selected': selectedSet.has(item.key),
+                  'lumen-table__row--clickable': selectable && selectOnRowClick,
+                }"
+                :aria-selected="selectable ? selectedSet.has(item.key) : undefined"
+                @click="onRowClick(item.row, i, $event)"
               >
-                <slot :name="`cell-${col.key}`" :row="row" :column="col" :index="i">
-                  {{ cellText(row, col) }}
-                </slot>
-              </td>
-            </tr>
+                <td v-if="expandable" class="lumen-table__cell--expander">
+                  <button
+                    type="button"
+                    class="lumen-table__expander"
+                    :aria-expanded="isExpanded(item.key)"
+                    :aria-label="
+                      isExpanded(item.key) ? t('table.collapseRow') : t('table.expandRow')
+                    "
+                    @click="toggleExpand(item.row)"
+                  >
+                    <span class="lumen-table__expander-icon" aria-hidden="true">
+                      {{ isExpanded(item.key) ? '▼' : '▶' }}
+                    </span>
+                  </button>
+                </td>
+                <td v-if="selectable" class="lumen-table__cell--selection">
+                  <input
+                    v-if="selectionMode === 'radio'"
+                    type="radio"
+                    :name="radioGroupName"
+                    :checked="selectedSet.has(item.key)"
+                    :aria-label="t('table.selectRow')"
+                    @change="toggleRow(item.row)"
+                  />
+                  <input
+                    v-else
+                    type="checkbox"
+                    :checked="selectedSet.has(item.key)"
+                    :aria-label="t('table.selectRow')"
+                    @change="toggleRow(item.row)"
+                  />
+                </td>
+                <td
+                  v-for="col in visibleCols"
+                  :key="col.key"
+                  :style="{ textAlign: col.align ?? 'left' }"
+                >
+                  <slot :name="`cell-${col.key}`" :row="item.row" :column="col" :index="i">
+                    {{ cellText(item.row, col) }}
+                  </slot>
+                </td>
+              </tr>
+              <tr
+                v-if="isExpanded(item.key) && $slots.expansion"
+                class="lumen-table__expansion-row"
+              >
+                <td :colspan="columnCount">
+                  <slot name="expansion" :row="item.row" :index="i" />
+                </td>
+              </tr>
+            </template>
           </template>
         </tbody>
         <tfoot v-if="$slots.footer">
@@ -716,5 +846,44 @@ const emptyText = computed(() =>
 .lumen-table__footer-row td {
   font-weight: 600;
   background-color: var(--lumen-bg-subtle);
+}
+
+.lumen-table__cell--expander {
+  width: 2.5rem;
+  text-align: center;
+}
+
+.lumen-table__expander {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border: none;
+  border-radius: var(--lumen-radius-sm);
+  background: none;
+  color: var(--lumen-text-muted);
+  cursor: pointer;
+}
+.lumen-table__expander:hover {
+  color: var(--lumen-text);
+  background-color: var(--lumen-bg-subtle);
+}
+.lumen-table__expander:focus-visible {
+  outline: 2px solid var(--lumen-primary);
+  outline-offset: 1px;
+}
+
+.lumen-table__expander-icon {
+  font-size: 0.625rem;
+}
+
+.lumen-table__row--clickable {
+  cursor: pointer;
+}
+
+.lumen-table__expansion-row td {
+  padding: 1rem 0.75rem;
+  background-color: var(--lumen-surface);
+  border-bottom: 1px solid var(--lumen-border);
 }
 </style>

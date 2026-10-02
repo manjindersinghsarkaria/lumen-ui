@@ -443,3 +443,157 @@ describe('Table CSV export', () => {
     expect(typeof vm.exportCSV).toBe('function')
   })
 })
+
+describe('Table selection modes', () => {
+  it('renders radios and selects a single row in radio mode', async () => {
+    const wrapper = mountTable({ selectable: true, selected: [], selectionMode: 'radio' })
+    const radios = wrapper.findAll('tbody input[type="radio"]')
+    expect(radios).toHaveLength(3)
+    // all radios share one group name
+    expect(radios[0].attributes('name')).toBe(radios[1].attributes('name'))
+    await radios[1].setValue(true)
+    expect(wrapper.emitted('update:selected')).toEqual([[[2]]])
+  })
+
+  it('hides the select-all checkbox in radio mode', () => {
+    const wrapper = mountTable({ selectable: true, selected: [], selectionMode: 'radio' })
+    expect(wrapper.find('thead input[type="checkbox"]').exists()).toBe(false)
+  })
+
+  it('emits row-select and row-unselect when toggling', async () => {
+    const wrapper = mountTable({ selectable: true, selected: [] })
+    const rowBoxes = wrapper.findAll('tbody input[type="checkbox"]')
+    await rowBoxes[0].setValue(true)
+    expect(wrapper.emitted('row-select')![0][0]).toEqual(rows[0])
+    await wrapper.setProps({ selected: [1] })
+    await rowBoxes[0].setValue(false)
+    expect(wrapper.emitted('row-unselect')![0][0]).toEqual(rows[0])
+  })
+
+  it('sets aria-selected on rows', () => {
+    const wrapper = mountTable({ selectable: true, selected: [2] })
+    const trs = wrapper.findAll('tbody tr')
+    expect(trs[0].attributes('aria-selected')).toBe('false')
+    expect(trs[1].attributes('aria-selected')).toBe('true')
+  })
+})
+
+describe('Table row-click selection', () => {
+  function clickRow(wrapper: ReturnType<typeof mount>, index: number, options = {}) {
+    return wrapper.findAll('tbody tr')[index].trigger('click', options)
+  }
+
+  it('selects only the clicked row on plain click (metaKeySelection)', async () => {
+    const wrapper = mountTable({ selectable: true, selected: [], selectOnRowClick: true })
+    await clickRow(wrapper, 0)
+    expect(wrapper.emitted('update:selected')).toEqual([[[1]]])
+    expect(wrapper.emitted('row-click')![0][0]).toEqual(rows[0])
+    expect(wrapper.emitted('row-click')![0][1]).toBe(0)
+  })
+
+  it('toggles on meta+click with metaKeySelection', async () => {
+    const wrapper = mountTable({ selectable: true, selected: [], selectOnRowClick: true })
+    await clickRow(wrapper, 0)
+    await wrapper.setProps({ selected: [1] })
+    await clickRow(wrapper, 1, { metaKey: true })
+    const emitted = wrapper.emitted('update:selected')!
+    expect(emitted[0][0]).toEqual([1])
+    expect(emitted[1][0]).toEqual([1, 2])
+    // meta+click again removes it
+    await wrapper.setProps({ selected: [1, 2] })
+    await clickRow(wrapper, 1, { ctrlKey: true })
+    expect(wrapper.emitted('update:selected')![2][0]).toEqual([1])
+  })
+
+  it('toggles on plain click when metaKeySelection is false', async () => {
+    const wrapper = mountTable({
+      selectable: true,
+      selected: [],
+      selectOnRowClick: true,
+      metaKeySelection: false,
+    })
+    await clickRow(wrapper, 0)
+    await wrapper.setProps({ selected: [1] })
+    await clickRow(wrapper, 0)
+    const emitted = wrapper.emitted('update:selected')!
+    expect(emitted[0][0]).toEqual([1])
+    expect(emitted[1][0]).toEqual([])
+  })
+
+  it('ignores clicks on interactive elements inside the row', async () => {
+    const wrapper = mountTable({ selectable: true, selected: [], selectOnRowClick: true })
+    await wrapper.findAll('tbody input[type="checkbox"]')[0].trigger('click')
+    expect(wrapper.emitted('update:selected')).toBeUndefined()
+  })
+
+  it('does nothing on row click when selectOnRowClick is off', async () => {
+    const wrapper = mountTable({ selectable: true, selected: [] })
+    await clickRow(wrapper, 0)
+    expect(wrapper.emitted('update:selected')).toBeUndefined()
+    expect(wrapper.emitted('row-click')![0][0]).toEqual(rows[0])
+  })
+})
+
+describe('Table expandable rows', () => {
+  const expansionSlot = {
+    expansion:
+      '<template #default="{ row }"><div class="detail">Details for {{ row.name }}</div></template>',
+  }
+
+  function mountExpandable(props: Record<string, unknown> = {}) {
+    return mount(Table, {
+      props: { columns, rows, rowKey: 'id', expandable: true, ...props },
+      slots: expansionSlot,
+    })
+  }
+
+  it('renders an expander per row and toggles the expansion panel', async () => {
+    const wrapper = mountExpandable()
+    const expanders = wrapper.findAll('.lumen-table__expander')
+    expect(expanders).toHaveLength(3)
+    expect(expanders[0].attributes('aria-expanded')).toBe('false')
+    expect(expanders[0].attributes('aria-label')).toBe('Expand row')
+    await expanders[0].trigger('click')
+    expect(wrapper.find('.lumen-table__expansion-row .detail').text()).toBe('Details for Cara')
+    expect(expanders[0].attributes('aria-expanded')).toBe('true')
+    expect(expanders[0].attributes('aria-label')).toBe('Collapse row')
+    expect(wrapper.emitted('update:expandedRows')).toEqual([[[1]]])
+    expect(wrapper.emitted('row-expand')![0][0]).toEqual(rows[0])
+    await expanders[0].trigger('click')
+    expect(wrapper.find('.lumen-table__expansion-row').exists()).toBe(false)
+    expect(wrapper.emitted('row-collapse')![0][0]).toEqual(rows[0])
+  })
+
+  it('allows multiple expanded rows by default', async () => {
+    const wrapper = mountExpandable()
+    const expanders = wrapper.findAll('.lumen-table__expander')
+    await expanders[0].trigger('click')
+    await expanders[1].trigger('click')
+    expect(wrapper.emitted('update:expandedRows')![1][0]).toEqual([1, 2])
+    expect(wrapper.findAll('.lumen-table__expansion-row')).toHaveLength(2)
+  })
+
+  it('collapses the previous row in single expandMode', async () => {
+    const wrapper = mountExpandable({ expandMode: 'single' })
+    const expanders = wrapper.findAll('.lumen-table__expander')
+    await expanders[0].trigger('click')
+    await expanders[1].trigger('click')
+    expect(wrapper.emitted('update:expandedRows')![1][0]).toEqual([2])
+    expect(wrapper.findAll('.lumen-table__expansion-row')).toHaveLength(1)
+    expect(wrapper.find('.lumen-table__expansion-row .detail').text()).toBe('Details for Ben')
+  })
+
+  it('honors defaultExpandedRows on mount', () => {
+    const wrapper = mountExpandable({ defaultExpandedRows: [2] })
+    expect(wrapper.findAll('.lumen-table__expansion-row')).toHaveLength(1)
+    expect(wrapper.find('.lumen-table__expansion-row .detail').text()).toBe('Details for Ben')
+  })
+
+  it('renders the expansion cell across all columns', async () => {
+    const wrapper = mountExpandable({ selectable: true, selected: [] })
+    await wrapper.findAll('.lumen-table__expander')[0].trigger('click')
+    const cell = wrapper.find('.lumen-table__expansion-row td')
+    // expander + selection + 3 data columns
+    expect(cell.attributes('colspan')).toBe('5')
+  })
+})

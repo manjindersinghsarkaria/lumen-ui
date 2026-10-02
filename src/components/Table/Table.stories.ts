@@ -21,6 +21,11 @@ interface StoryArgs {
   showGlobalFilter?: boolean
   showExportButton?: boolean
   exportFilename?: string
+  selectionMode?: 'checkbox' | 'radio'
+  selectOnRowClick?: boolean
+  expandable?: boolean
+  expandMode?: 'single' | 'multiple'
+  defaultExpandedRows?: (string | number)[]
 }
 
 type Story = StoryObj<typeof Table>
@@ -246,6 +251,107 @@ export const CustomFilterSlot: Story = {
     docs: {
       description: {
         story: 'Replace any column filter with custom UI via the #filter-{key} slot.',
+      },
+    },
+  },
+}
+
+export const RadioSelection: Story = {
+  args: {
+    columns: peopleColumns,
+    rows: peopleRows,
+    rowKey: 'id',
+    selectable: true,
+    selectionMode: 'radio',
+    striped: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Single-row selection with radio inputs (no select-all).',
+      },
+    },
+  },
+}
+
+export const RowClickSelection: Story = {
+  args: {
+    columns: peopleColumns,
+    rows: peopleRows,
+    rowKey: 'id',
+    selectable: true,
+    selectOnRowClick: true,
+    striped: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Clicking a row selects it; with metaKeySelection (default) a plain click selects only that row while meta/ctrl+click toggles.',
+      },
+    },
+  },
+}
+
+export const ExpandableRows: Story = {
+  args: {
+    columns: peopleColumns,
+    rows: peopleRows,
+    rowKey: 'id',
+    expandable: true,
+    striped: true,
+  },
+  render: (renderArgs) => ({
+    components: { Table },
+    setup: () => ({ args: renderArgs }),
+    template: `
+      <Table v-bind="args">
+        <template #expansion="{ row }">
+          <div>
+            <strong>{{ row.name }}</strong> is {{ row.age }} years old and lives in {{ row.city }}.
+            <br />
+            <small>Row id {{ row.id }} — rendered by the #expansion slot.</small>
+          </div>
+        </template>
+      </Table>`,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Expandable rows with the #expansion slot. Multiple rows can be open at once.',
+      },
+    },
+  },
+}
+
+export const ExpandableSingle: Story = {
+  args: {
+    columns: peopleColumns,
+    rows: peopleRows,
+    rowKey: 'id',
+    expandable: true,
+    expandMode: 'single',
+    defaultExpandedRows: [3],
+    striped: true,
+  },
+  render: (renderArgs) => ({
+    components: { Table },
+    setup: () => ({ args: renderArgs }),
+    template: `
+      <Table v-bind="args">
+        <template #expansion="{ row }">
+          <div>
+            <strong>{{ row.name }}</strong> is {{ row.age }} years old and lives in {{ row.city }}.
+            <br />
+            <small>Row id {{ row.id }} — rendered by the #expansion slot.</small>
+          </div>
+        </template>
+      </Table>`,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Single expansion mode — opening one row collapses the previous one.',
       },
     },
   },
